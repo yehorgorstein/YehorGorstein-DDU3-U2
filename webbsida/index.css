@@ -6,9 +6,10 @@
 }
 
 main {
+    font-family: mainFont;
     display: flex;
     gap: 10px;
-    font-family: mainFont;
+    justify-content: center;
 }
 
 .cityDiv {
@@ -35,7 +36,7 @@ input {
 #citiesListDiv {
     background-color: aquamarine;
     text-align: center;
-    height: 500px;
+    height: 700px;
 }
 
 /*CITIES LIST CSS END!*/
