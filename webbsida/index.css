@@ -1,0 +1,65 @@
+/*COMMON CSS*/
+
+@font-face {
+    font-family: mainFont;
+    src: url(TradeWinds-Regular.ttf);
+}
+
+main {
+    display: flex;
+    gap: 10px;
+    font-family: mainFont;
+}
+
+.cityDiv {
+    background-color: black;
+    width: 400px;
+    height: 200px;
+}
+
+.cityDiv div {
+    margin: 15px;
+}
+
+input {
+    border: none;
+    background-color: transparent;
+    outline: none;
+    border-bottom: 2px solid black;
+}
+
+/*COMMON CSS END!*/
+
+/*CITIES LIST CSS*/
+
+#citiesListDiv {
+    background-color: aquamarine;
+    height: 500px;
+}
+
+/*CITIES LIST CSS END!*/
+
+/* ADD AND SEARCH CSS*/
+
+.inputsDiv {
+    background-color: aquamarine;
+    height: 100px;
+}
+
+.greenButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(129, 48, 129);
+    color: white;
+    font-size: 20px;
+    border-radius: 10px;
+    height: 50px;
+}
+
+.greenButton:hover {
+    background-color: rgb(165, 112, 165);
+    box-shadow: 10px 10px 10px rgb(65, 33, 65);
+}
+
+/* ADD AND SEARCH CSS END!*/
