@@ -34,6 +34,7 @@ input {
 
 #citiesListDiv {
     background-color: aquamarine;
+    text-align: center;
     height: 500px;
 }
 
@@ -46,11 +47,15 @@ input {
     height: 100px;
 }
 
+.inputsDiv div {
+    padding-top: 10px;
+}
+
 .greenButton {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgb(129, 48, 129);
+    background-color: rgb(61, 179, 77);
     color: white;
     font-size: 20px;
     border-radius: 10px;
@@ -58,8 +63,18 @@ input {
 }
 
 .greenButton:hover {
-    background-color: rgb(165, 112, 165);
-    box-shadow: 10px 10px 10px rgb(65, 33, 65);
+    background-color: rgb(157, 226, 178);
+    box-shadow: 0px 0px 10px rgb(146, 144, 146);
+    cursor: pointer;
+    user-select: none;
+}
+
+#cityDiv2 {
+    height: 450px; /*WROTE OVER LAST HEIGHT*/
+}
+
+#searchListDiv {
+    height: 200px;
 }
 
 /* ADD AND SEARCH CSS END!*/
