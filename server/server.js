@@ -1,11 +1,12 @@
 const array = [];
+let nextId = 1;
 
 async function handler(request) {
     const url = new URL(request.url);
 
     const headersCORS = new Headers();
     headersCORS.set("Access-Control-Allow-Origin", "*"); 
-    headersCORS.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    headersCORS.set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
     headersCORS.set("Access-Control-Allow-Headers", "Content-Type");
     if (request.method === "OPTIONS") {
         return new Response(null, { headers: headersCORS });
@@ -31,7 +32,7 @@ async function handler(request) {
                         { headers: headersCORS, status: 409 }
                     );
                 } else {
-                    const newData = { id: array.length + 1, name: requestData.name, country: requestData.country };
+                    const newData = { id: nextId++, name: requestData.name, country: requestData.country };
                     array.push(newData);
                     return new Response(JSON.stringify(newData), { headers: headersCORS, status: 200 });
                 }
@@ -41,20 +42,21 @@ async function handler(request) {
             const contentType = request.headers.get("content-type");
             if (contentType == "application/json") {
                 const requestData = await request.json();
-                if (!requestData.id) {
-                    return new Response(JSON.stringify("There needs to be an id", 
+                if (requestData.id == undefined) {
+                    return new Response(JSON.stringify("There needs to be an id"), 
                         { headers: headersCORS, status: 400 }
-                    ))
+                    )
                 }
-                if (array.find(city => city.id == requestData.id)) {
-                    array.splice(id, 1);
-                    return new Response(JSON.stringify("Delete OK", 
+                const index = array.findIndex(city => city.id == requestData.id);
+                if (index !== -1) {
+                    array.splice(index, 1);
+                    return new Response(JSON.stringify({ id: requestData.id, message:"Delete OK" }), 
                         { headers: headersCORS, status: 200 }
-                    ))
+                    )
                 } else {
-                    return new Response(JSON.stringify("There is no city with this id", 
+                    return new Response(JSON.stringify("There is no city with this id"), 
                         { headers: headersCORS, status: 404 }
-                    ))
+                    )
                 }
             }
         }
