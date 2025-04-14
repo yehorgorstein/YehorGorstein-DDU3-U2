@@ -37,6 +37,27 @@ async function handler(request) {
                 }
             }
         }
+        if (request.method == "DELETE") {
+            const contentType = request.headers.get("content-type");
+            if (contentType == "application/json") {
+                const requestData = await request.json();
+                if (!requestData.id) {
+                    return new Response(JSON.stringify("There needs to be an id", 
+                        { headers: headersCORS, status: 400 }
+                    ))
+                }
+                if (array.find(city => city.id == requestData.id)) {
+                    array.splice(id, 1);
+                    return new Response(JSON.stringify("Delete OK", 
+                        { headers: headersCORS, status: 200 }
+                    ))
+                } else {
+                    return new Response(JSON.stringify("There is no city with this id", 
+                        { headers: headersCORS, status: 404 }
+                    ))
+                }
+            }
+        }
     }
 
     return new Response(null, { headers: headersCORS, status: 400 })

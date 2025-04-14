@@ -34,9 +34,38 @@ input {
 /*CITIES LIST CSS*/
 
 #citiesListDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background-color: aquamarine;
-    text-align: center;
     height: 700px;
+}
+
+.cityBox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: black;
+    color: white;
+    width: 300px;
+    height: 50px;
+    padding: 0 20px;
+    border-radius: 10px;
+}
+
+.deleteButton {
+    background-color: rgb(128, 0, 0);
+    color: white;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.deleteButton:hover {
+    background-color: red;
+    cursor: pointer;
+    user-select: none;
+    margin: 0 20px 2px 0;
+    box-shadow: 5px 5px 5px rgb(148, 1, 1);
 }
 
 /*CITIES LIST CSS END!*/
