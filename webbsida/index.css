@@ -41,6 +41,15 @@ input {
     height: 700px;
 }
 
+#citiesListDiv div {
+    margin: 5px;
+}
+
+#citiesList {
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
 .cityBox {
     display: flex;
     align-items: center;
@@ -49,7 +58,7 @@ input {
     color: white;
     width: 300px;
     height: 50px;
-    padding: 0 20px;
+    padding-left: 20px;
     border-radius: 10px;
 }
 
@@ -63,7 +72,6 @@ input {
 .deleteButton:hover {
     background-color: red;
     cursor: pointer;
-    margin: 0 20px 2px 0;
     box-shadow: 5px 5px 5px rgb(148, 1, 1);
 }
 
@@ -98,17 +106,23 @@ input {
 }
 
 #cityDiv2 {
-    height: 500px; /*WROTE OVER LAST HEIGHT*/
+    height: 500px; 
 }
 
 #searchListDiv {
-    height: 250px;
+    background-color: aquamarine;
     display: flex;
     justify-content: center;
+    height: 250px;
 }
 
 #searchListDiv div{
-    margin: 0;
+    margin: 5px;
+}
+
+#citiesListSearched {
+    overflow-y: auto;
+    scrollbar-width: none;
 }
 
 /* ADD AND SEARCH CSS END!*/

@@ -1,4 +1,4 @@
-const array = [];
+const array = [{id: 1, name: "Lund", country: "Sweden"}, {id: 2, name: "Amsterdam", country: "Netherlands"}];
 
 async function handler(request) {
     const url = new URL(request.url);
@@ -22,7 +22,7 @@ async function handler(request) {
                         { headers: headersCORS, status: 400 }
                     );
                 };
-                if (array.find(city => city.name == requestData.name)) {
+                if (array.find(city => city.name.toLowerCase() == requestData.name.toLowerCase())) {
                     return new Response(JSON.stringify(
                         { error: "The city already exists" }), 
                         { headers: headersCORS, status: 409 }
@@ -80,11 +80,11 @@ async function handler(request) {
 
         const filteredCities = array.filter(city => {
             const nameMatch = city.name.toLowerCase().includes(text.toLowerCase());
-            const countryMatch = country ? city.country.toLowerCase() === country.toLowerCase() : true;
+            const countryMatch = country ? city.country.toLowerCase().includes(country.toLowerCase()) : true;
             return nameMatch && countryMatch;
-        })
+        });
         return new Response(JSON.stringify(filteredCities), { headers: headersCORS, status: 200 });
-    }
+    };
 
     return new Response(null, { headers: headersCORS, status: 400 })
 };

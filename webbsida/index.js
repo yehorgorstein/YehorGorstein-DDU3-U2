@@ -3,13 +3,53 @@ const countryAddInput = document.querySelector("#countryAddInput");
 const citiesList = document.querySelector("#citiesList");
 const cityAddButton = document.querySelector("#cityAddButton");
 
+const citySearchInput = document.querySelector("#citySearchInput");
+const countrySearchInput = document.querySelector("#countrySearchInput");
+const citiesListSearched = document.querySelector("#citiesListSearched");
+const citySearchButton = document.querySelector("#citySearchButton");
+
 async function getCitiesArray() {
     const request = new Request("http://localhost:8000/cities");
     const response = await fetch(request);
     const resource = await response.json();
-    console.log(resource);
+    return resource;
 };
-//getCitiesArray();
+
+getCitiesArray().then((resource) => {
+    for (let city of resource) {
+        renderCity(city);
+    };
+});
+
+function renderCity(cityData) {
+    const cityDiv = document.createElement("div");
+    cityDiv.classList.add("cityBox");
+    cityDiv.textContent = `${cityData.name}, ${cityData.country}`;
+
+    const deleteButton = document.createElement("div");
+    deleteButton.classList.add("deleteButton");
+    deleteButton.textContent = "delete";
+    citiesList.append(cityDiv);
+    cityDiv.append(deleteButton);
+
+    deleteButton.addEventListener("click", () => {  
+        async function deleteCity() {
+            const deleteRequest = new Request("http://localhost:8000/cities", {
+                method: "DELETE",
+                body: JSON.stringify({ id: cityData.id }),
+                headers: { "content-type": "application/json" }
+            });
+            const response = await fetch(deleteRequest);
+            const resource = await response.json();
+            return resource;
+        };
+        deleteCity().then((resource) => {
+            if (resource.id === cityData.id) {
+                cityDiv.remove(); 
+            };
+        });
+    });
+};
 
 cityAddButton.addEventListener("click", () => {
     async function postCity() {
@@ -20,70 +60,42 @@ cityAddButton.addEventListener("click", () => {
         });
         const response = await fetch(request);
         const resource = await response.json();
-        console.log(resource);
         return resource;
     };
 
-    postCity().then(handleCity);
-
-    function handleCity(resource) {
+    postCity().then((resource) => {
         if (resource.name !== undefined || resource.country !== undefined) {
-            const city = document.createElement("div");
-            city.classList.add("cityBox");
-            city.textContent = `${resource.name}, ${resource.country}`;
-
-            const deleteButton = document.createElement("div");
-            deleteButton.classList.add("deleteButton");
-            deleteButton.textContent = "delete";
-            citiesList.append(city);
-            city.append(deleteButton);
-
-            deleteButton.addEventListener("click", () => {  
-                async function deleteCity() {
-                    const deleteRequest = new Request("http://localhost:8000/cities", {
-                        method: "DELETE",
-                        body: JSON.stringify({ id: resource.id }),
-                        headers: { "content-type": "application/json" }
-                    });
-                    const response = await fetch(deleteRequest);
-                    const result = await response.json();
-                    return result;
-                };
-                deleteCity().then((result) => {
-                    if (result.id === resource.id) {
-                        city.remove(); 
-                    };
-                });
-            });
+            renderCity(resource);
         };
-    };
+    });
+    cityAddInput.value = "";
+    countryAddInput.value = "";
 });
 
-const citySearchInput = document.querySelector("#citySearchInput");
-const countrySearchInput = document.querySelector("#countrySearchInput");
-const citiesListSearched = document.querySelector("#citiesListSearched");
-const citySearchButton = document.querySelector("#citySearchButton");
-
 citySearchButton.addEventListener("click", () => {
+    citiesListSearched.textContent = "";
     const url = new URL("http://localhost:8000/cities/search")
     url.searchParams.set("text", citySearchInput.value);
     url.searchParams.set("country", countrySearchInput.value);
     async function searchCities() {
         const response = await fetch(url);
         const resource = await response.json();
-        console.log(resource);
         return resource;
     };
 
     searchCities().then(handleCities);
 
     function handleCities(resource) {
+        if (resource == "") {
+            citiesListSearched.textContent = "No cities found";
+        };
         for (let city of resource) {
-            console.log(city);
-            cityDiv = document.createElement("div");
+            const cityDiv = document.createElement("div");
             cityDiv.classList.add("cityBox");
             cityDiv.textContent = `${city.name}, ${city.country}`;
             citiesListSearched.append(cityDiv);
         };
     };
+    citySearchInput.value = "";
+    countrySearchInput.value = "";
 });
