@@ -1,5 +1,4 @@
 const array = [];
-let nextId = 1;
 
 async function handler(request) {
     const url = new URL(request.url);
@@ -10,12 +9,9 @@ async function handler(request) {
     headersCORS.set("Access-Control-Allow-Headers", "Content-Type");
     if (request.method === "OPTIONS") {
         return new Response(null, { headers: headersCORS });
-    }
+    };
 
     if (url.pathname == "/cities") {
-        if (request.method == "GET") {
-            return new Response(JSON.stringify(array), { headers: headersCORS, status: 200 });
-        }
         if (request.method == "POST") {
             const contentType = request.headers.get("content-type");
             if (contentType == "application/json") {
@@ -25,19 +21,28 @@ async function handler(request) {
                         { error: "Both inputs need to be filled in" }), 
                         { headers: headersCORS, status: 400 }
                     );
-                }
+                };
                 if (array.find(city => city.name == requestData.name)) {
                     return new Response(JSON.stringify(
                         { error: "The city already exists" }), 
                         { headers: headersCORS, status: 409 }
                     );
                 } else {
-                    const newData = { id: nextId++, name: requestData.name, country: requestData.country };
+                    let highestId = 0;
+                    if (array.length > 0) {
+                        for (let i = 0; i < array.length; i++) {
+                            if (array[i].id > highestId) {
+                                highestId = array[i].id
+                            };
+                        };
+                    };
+                    const newId = highestId + 1;
+                    const newData = { id: newId, name: requestData.name, country: requestData.country };
                     array.push(newData);
                     return new Response(JSON.stringify(newData), { headers: headersCORS, status: 200 });
-                }
-            }
-        }
+                };
+            };
+        };
         if (request.method == "DELETE") {
             const contentType = request.headers.get("content-type");
             if (contentType == "application/json") {
@@ -46,7 +51,7 @@ async function handler(request) {
                     return new Response(JSON.stringify("There needs to be an id"), 
                         { headers: headersCORS, status: 400 }
                     )
-                }
+                };
                 const index = array.findIndex(city => city.id == requestData.id);
                 if (index !== -1) {
                     array.splice(index, 1);
@@ -57,12 +62,31 @@ async function handler(request) {
                     return new Response(JSON.stringify("There is no city with this id"), 
                         { headers: headersCORS, status: 404 }
                     )
-                }
-            }
-        }
+                };
+            };
+        };
+        return new Response(JSON.stringify(array), { headers: headersCORS, status: 200 });
+    };
+
+    if (url.pathname == "/cities/search") {
+        const text = url.searchParams.get("text");
+        const country = url.searchParams.get("country");
+
+        if (text == undefined) {
+            return new Response(JSON.stringify({ error: "Text needs to be filled" }), 
+                { headers: headersCORS, status: 400 }
+            );
+        };
+
+        const filteredCities = array.filter(city => {
+            const nameMatch = city.name.toLowerCase().includes(text.toLowerCase());
+            const countryMatch = country ? city.country.toLowerCase() === country.toLowerCase() : true;
+            return nameMatch && countryMatch;
+        })
+        return new Response(JSON.stringify(filteredCities), { headers: headersCORS, status: 200 });
     }
 
     return new Response(null, { headers: headersCORS, status: 400 })
-}
+};
 
 Deno.serve(handler);

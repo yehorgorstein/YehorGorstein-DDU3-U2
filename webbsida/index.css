@@ -14,7 +14,7 @@ main {
 
 .cityDiv {
     background-color: black;
-    width: 400px;
+    width: 500px;
     height: 200px;
 }
 
@@ -98,11 +98,17 @@ input {
 }
 
 #cityDiv2 {
-    height: 450px; /*WROTE OVER LAST HEIGHT*/
+    height: 500px; /*WROTE OVER LAST HEIGHT*/
 }
 
 #searchListDiv {
-    height: 200px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+}
+
+#searchListDiv div{
+    margin: 0;
 }
 
 /* ADD AND SEARCH CSS END!*/
