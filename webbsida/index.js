@@ -55,7 +55,7 @@ cityAddButton.addEventListener("click", () => {
     async function postCity() {
         const request = new Request("http://localhost:8000/cities", {
             method: "POST", 
-            body: JSON.stringify({ name: cityAddInput.value, country: countryAddInput.value }),
+            body: JSON.stringify({ name: cityAddInput.value.trim(), country: countryAddInput.value.trim() }),
             headers: { "content-type": "application/json" }
         });
         const response = await fetch(request);
@@ -75,8 +75,8 @@ cityAddButton.addEventListener("click", () => {
 citySearchButton.addEventListener("click", () => {
     citiesListSearched.textContent = "";
     const url = new URL("http://localhost:8000/cities/search")
-    url.searchParams.set("text", citySearchInput.value);
-    url.searchParams.set("country", countrySearchInput.value);
+    url.searchParams.set("text", citySearchInput.value.trim());
+    url.searchParams.set("country", countrySearchInput.value.trim());
     async function searchCities() {
         const response = await fetch(url);
         const resource = await response.json();
@@ -86,8 +86,9 @@ citySearchButton.addEventListener("click", () => {
     searchCities().then(handleCities);
 
     function handleCities(resource) {
-        if (resource == "") {
+        if (!Array.isArray(resource) || resource.length == 0){
             citiesListSearched.textContent = "No cities found";
+            return;
         };
         for (let city of resource) {
             const cityDiv = document.createElement("div");

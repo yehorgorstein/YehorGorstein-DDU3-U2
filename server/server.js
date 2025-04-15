@@ -1,4 +1,4 @@
-const array = [{id: 1, name: "Lund", country: "Sweden"}, {id: 2, name: "Amsterdam", country: "Netherlands"}];
+const array = [{id: 1, name: "Lund", country: "Sweden"}, {id: 2, name: "Amsterdam", country: "Netherlands"}, {id: 3, name: "Malmö", country: "Sweden"}];
 
 async function handler(request) {
     const url = new URL(request.url);
@@ -68,11 +68,15 @@ async function handler(request) {
         return new Response(JSON.stringify(array), { headers: headersCORS, status: 200 });
     };
 
+    if (url.pathname == "/cities/:id") {
+        
+    }
+
     if (url.pathname == "/cities/search") {
         const text = url.searchParams.get("text");
         const country = url.searchParams.get("country");
 
-        if (text == undefined) {
+        if (!text) {
             return new Response(JSON.stringify({ error: "Text needs to be filled" }), 
                 { headers: headersCORS, status: 400 }
             );
