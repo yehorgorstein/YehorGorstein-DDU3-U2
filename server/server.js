@@ -11,6 +11,20 @@ async function handler(request) {
         return new Response(null, { headers: headersCORS });
     };
 
+    const route = new URLPattern({ pathname: "/cities/:id"});
+    const matchId = route.exec(request.url);
+    if (matchId) {
+        const id = matchId.pathname.groups.id;
+        const correctCity = array.find(city => city.id == id);
+        console.log(correctCity);
+        if (correctCity !== undefined) {
+            return new Response(JSON.stringify(correctCity), { headers: headersCORS, status: 200 });
+        };
+        return new Response(JSON.stringify({ error: "There is no city with this id"}), 
+            { headers: headersCORS, status: 404 }
+        );
+    };
+
     if (url.pathname == "/cities") {
         if (request.method == "POST") {
             const contentType = request.headers.get("content-type");
@@ -32,7 +46,7 @@ async function handler(request) {
                     if (array.length > 0) {
                         for (let i = 0; i < array.length; i++) {
                             if (array[i].id > highestId) {
-                                highestId = array[i].id
+                                highestId = array[i].id;
                             };
                         };
                     };
@@ -43,6 +57,7 @@ async function handler(request) {
                 };
             };
         };
+
         if (request.method == "DELETE") {
             const contentType = request.headers.get("content-type");
             if (contentType == "application/json") {
@@ -57,20 +72,16 @@ async function handler(request) {
                     array.splice(index, 1);
                     return new Response(JSON.stringify({ id: requestData.id, message:"Delete OK" }), 
                         { headers: headersCORS, status: 200 }
-                    )
+                    );
                 } else {
                     return new Response(JSON.stringify("There is no city with this id"), 
                         { headers: headersCORS, status: 404 }
-                    )
+                    );
                 };
             };
         };
         return new Response(JSON.stringify(array), { headers: headersCORS, status: 200 });
     };
-
-    if (url.pathname == "/cities/:id") {
-        
-    }
 
     if (url.pathname == "/cities/search") {
         const text = url.searchParams.get("text");
@@ -90,7 +101,8 @@ async function handler(request) {
         return new Response(JSON.stringify(filteredCities), { headers: headersCORS, status: 200 });
     };
 
-    return new Response(null, { headers: headersCORS, status: 400 })
+    return new Response(null, { headers: headersCORS, status: 400 });
 };
+
 
 Deno.serve(handler);

@@ -67,6 +67,7 @@ cityAddButton.addEventListener("click", () => {
         if (resource.name !== undefined || resource.country !== undefined) {
             renderCity(resource);
         };
+        console.log(resource);
     });
     cityAddInput.value = "";
     countryAddInput.value = "";
@@ -74,7 +75,7 @@ cityAddButton.addEventListener("click", () => {
 
 citySearchButton.addEventListener("click", () => {
     citiesListSearched.textContent = "";
-    const url = new URL("http://localhost:8000/cities/search")
+    const url = new URL("http://localhost:8000/cities/search");
     url.searchParams.set("text", citySearchInput.value.trim());
     url.searchParams.set("country", countrySearchInput.value.trim());
     async function searchCities() {
