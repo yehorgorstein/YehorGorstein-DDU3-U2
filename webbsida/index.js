@@ -14,7 +14,6 @@ async function getCitiesArray() {
     const resource = await response.json();
     return resource;
 };
-
 getCitiesArray().then((resource) => {
     for (let city of resource) {
         renderCity(city);
@@ -25,7 +24,6 @@ function renderCity(cityData) {
     const cityDiv = document.createElement("div");
     cityDiv.classList.add("cityBox");
     cityDiv.textContent = `${cityData.name}, ${cityData.country}`;
-
     const deleteButton = document.createElement("div");
     deleteButton.classList.add("deleteButton");
     deleteButton.textContent = "delete";
@@ -62,13 +60,12 @@ cityAddButton.addEventListener("click", () => {
         const resource = await response.json();
         return resource;
     };
-
     postCity().then((resource) => {
-        if (resource.name !== undefined || resource.country !== undefined) {
+        if (resource.name && resource.country) {
             renderCity(resource);
         };
-        console.log(resource);
     });
+
     cityAddInput.value = "";
     countryAddInput.value = "";
 });
@@ -76,18 +73,17 @@ cityAddButton.addEventListener("click", () => {
 citySearchButton.addEventListener("click", () => {
     citiesListSearched.textContent = "";
     const url = new URL("http://localhost:8000/cities/search");
-    url.searchParams.set("text", citySearchInput.value.trim());
-    url.searchParams.set("country", countrySearchInput.value.trim());
+    url.searchParams.set("text", citySearchInput.value);
+    url.searchParams.set("country", countrySearchInput.value);
     async function searchCities() {
         const response = await fetch(url);
         const resource = await response.json();
         return resource;
     };
-
     searchCities().then(handleCities);
 
     function handleCities(resource) {
-        if (!Array.isArray(resource) || resource.length == 0){
+        if (!Array.isArray(resource) || resource.length === 0){
             citiesListSearched.textContent = "No cities found";
             return;
         };
@@ -98,6 +94,7 @@ citySearchButton.addEventListener("click", () => {
             citiesListSearched.append(cityDiv);
         };
     };
+    
     citySearchInput.value = "";
     countrySearchInput.value = "";
 });
