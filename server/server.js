@@ -64,7 +64,7 @@ async function handler(request) {
                     const index = array.findIndex(city => city.id === requestData.id);
                     if (index !== -1) {
                         array.splice(index, 1);
-                        return new Response(JSON.stringify({ id: requestData.id, message:"Delete OK" }), 
+                        return new Response(JSON.stringify({ id: requestData.id, message: "Delete OK" }), 
                             { headers: headersCORS, status: 200 }
                         );
                     } else {
