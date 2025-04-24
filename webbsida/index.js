@@ -8,6 +8,9 @@ const countrySearchInput = document.querySelector("#countrySearchInput");
 const citiesListSearched = document.querySelector("#citiesListSearched");
 const citySearchButton = document.querySelector("#citySearchButton");
 
+const popUp = document.querySelector("#popUp");
+let popUpTimeout;
+
 async function getCitiesArray() {
     const request = new Request("http://localhost:8000/cities");
     const response = await fetch(request);
@@ -50,10 +53,14 @@ function renderCity(cityData) {
 };
 
 cityAddButton.addEventListener("click", () => {
+    function firstUpperCase(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    };
+    popUp.classList.add("hidden");
     async function postCity() {
         const request = new Request("http://localhost:8000/cities", {
             method: "POST", 
-            body: JSON.stringify({ name: cityAddInput.value.trim(), country: countryAddInput.value.trim() }),
+            body: JSON.stringify({ name: firstUpperCase(cityAddInput.value.trim()), country: firstUpperCase(countryAddInput.value.trim()) }),
             headers: { "content-type": "application/json" }
         });
         const response = await fetch(request);
@@ -63,9 +70,15 @@ cityAddButton.addEventListener("click", () => {
     postCity().then((resource) => {
         if (resource.name && resource.country) {
             renderCity(resource);
-        };
+        } else {
+            popUp.classList.remove("hidden");
+            popUp.textContent = resource.error;
+            clearTimeout(popUpTimeout);
+            popUpTimeout = setTimeout(() => {
+                popUp.classList.add("hidden"); 
+            }, 4000);
+        }
     });
-
     cityAddInput.value = "";
     countryAddInput.value = "";
 });
@@ -77,17 +90,25 @@ citySearchButton.addEventListener("click", () => {
     url.searchParams.set("country", countrySearchInput.value);
     async function searchCities() {
         const response = await fetch(url);
-        const resource = await response.json();
-        return resource;
+        const resourceBody = await response.json();
+        return { status: response.status, body: resourceBody };
     };
     searchCities().then(handleCities);
 
     function handleCities(resource) {
-        if (!Array.isArray(resource) || resource.length === 0){
+        if (!Array.isArray(resource.body) || resource.body.length === 0){
             citiesListSearched.textContent = "No cities found";
+            if (resource.status === 400) {
+                popUp.classList.remove("hidden");
+                popUp.textContent = resource.body.error;
+                clearTimeout(popUpTimeout);
+                popUpTimeout = setTimeout(() => {
+                    popUp.classList.add("hidden"); 
+                }, 4000);
+            }
             return;
         };
-        for (let city of resource) {
+        for (let city of resource.body) {
             const cityDiv = document.createElement("div");
             cityDiv.classList.add("cityBox");
             cityDiv.textContent = `${city.name}, ${city.country}`;

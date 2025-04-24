@@ -59,7 +59,7 @@ async function handler(request) {
                     if (!requestData || !requestData.id) {
                         return new Response(JSON.stringify({ error: "An id needs to be written here" }), 
                             { headers: headersCORS, status: 400 }
-                        )
+                        );
                     };
                     const index = array.findIndex(city => city.id === requestData.id);
                     if (index !== -1) {
@@ -89,7 +89,7 @@ async function handler(request) {
         const country = url.searchParams.get("country");
 
         if (!text) {
-            return new Response(JSON.stringify({ error: "Text needs to be filled" }), 
+            return new Response(JSON.stringify({ error: "Text needs to be filled in" }), 
                 { headers: headersCORS, status: 400 }
             );
         };
