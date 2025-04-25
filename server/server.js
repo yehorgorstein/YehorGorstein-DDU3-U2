@@ -116,7 +116,7 @@ async function handler(request) {
         );
     };
 
-    return new Response(null, { headers: headersCORS, status: 400 });
+    return new Response(JSON.stringify({ error: "There is no such endpoint"}), { headers: headersCORS, status: 400 });
 };
 
 Deno.serve(handler);
