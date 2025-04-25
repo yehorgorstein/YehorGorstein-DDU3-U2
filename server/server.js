@@ -12,6 +12,10 @@ async function handler(request) {
     };
 
     if (url.pathname === "/cities") {
+        if (request.method === "GET") {
+            return new Response(JSON.stringify(array), { headers: headersCORS, status: 200 });
+        };
+
         if (request.method === "POST") {
             const contentType = request.headers.get("content-type");
             if (contentType === "application/json") {
@@ -81,7 +85,7 @@ async function handler(request) {
             };
         };
 
-        return new Response(JSON.stringify(array), { headers: headersCORS, status: 200 });
+        return new Response(null, { headers: headersCORS, status: 400 });
     };
 
     if (url.pathname === "/cities/search") {
